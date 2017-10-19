@@ -111,9 +111,44 @@ class ChainTest < Minitest::Test
     assert_equal(18, second_proof)
   end
 
+  def test_node_merge_chains
+    node = Node.new(MockPOWGenerator.new)
+    another_chain = Chain.init
+    another_chain.add_block("Another Block")
+
+    assert_equal(1, node.chain.block_count)
+
+    node.merge_chain(another_chain)
+
+    assert_equal(2, node.chain.block_count)
+  end
+
+  def test_broadcast_after_mining
+    node_miner = Node.new(MockPOWGenerator.new)
+    node_receiver = Node.new(MockPOWGenerator.new)
+    node_miner.add_peer(node_receiver)
+    node_miner.consensus_method = MockConsensus.new
+
+    tx = { from: 'a sender',
+      to: 'a receiver',
+      amount: 666 }
+
+    node_miner.submit_transaction(tx)
+    node_miner.mine
+
+    assert_equal(2, node_receiver.chain.block_count)
+    assert_equal(tx , node_receiver.chain.last_block.data[:transactions].first)
+  end
+
   class MockPOWGenerator
     def pow
       'pow'
+    end
+  end
+
+  class MockConsensus
+    def select(a_chain, another_chain)
+      another_chain
     end
   end
 end
@@ -126,6 +161,7 @@ class Node
   def initialize(pow_generator=POWGenerator.new)
     @chain = Chain.init
     @transactions = []
+    @peers = []
     @pow_generator = pow_generator
   end
 
@@ -137,10 +173,23 @@ class Node
     submit_transaction(mining_trx)
 
     @chain.add_block({proof_of_work: proof_of_work, transactions: @transactions})
+    broadcast_changes
   end
 
   def chain
     @chain
+  end
+
+  def merge_chain(another_chain)
+    @chain = another_chain.clone
+  end
+
+  def add_peer(peer_node)
+    @peers << peer_node
+  end
+
+  def consensus_method=(method)
+    @consensus = method
   end
 
   private
@@ -153,6 +202,10 @@ class Node
     {from: NETWORK_ID,
       to: NODE_ID,
       amount: VALUE_FROM_MINING}
+  end
+
+  def broadcast_changes
+    @peers.each { |peer| peer.merge_chain(@chain) }
   end
 
 end
@@ -192,7 +245,7 @@ class Chain
 
   def initialize
     @tail = Block.build_genesis
-    @blocks = 0
+    @blocks = 1
   end
 
   def last_block
@@ -200,7 +253,7 @@ class Chain
   end
 
   def block_count
-    @blocks = @blocks + 1
+    @blocks
   end
 end
 
