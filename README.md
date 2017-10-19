@@ -1,13 +1,14 @@
-## Tiny Blockchain
+# Tiny Blockchain
 
-A blockchain is a continuously growing list of records, called blocks, which are linked and secured using cryptography.
+## Part 1: The simplest blockchain
 
-Each block typically contains a *hash* as a link to a previous block, a *timestamp*, *transaction data*, and its *index* in the blockchain. 
+A blockchain is a continuously **growing list of records, called blocks**, which are linked and secured using cryptography.
 
-Each block includes the previous timestamp and hash in its hash, forming a chain, with each additional hash reinforcing the ones before it.
+Each block typically contains a **hash** as a link to a previous block, a **timestamp**, **transaction data**, and its **index** in the blockchain. 
 
-A blockchain needs a first block, this block is a special block called **genesis block**. To make things easy, this block is of index 0, and it has an arbitrary data value and an arbitrary value in the “previous hash” parameter.
+The hash of each block includes the **previous timestamp and previous hash**, forming a chain, with each additional hash reinforcing the ones before it.
 
+Any blockchain needs a first block, this block is a special block called **genesis block**. To make things easy, this block is of index 0, and it has an arbitrary data value and an arbitrary value in the “previous hash” parameter.
 
 So far we have the basic logic of a blockchain:
 
@@ -32,9 +33,26 @@ Block 9. Hash fe19b80b1fb9e89ec23b910be228a19b9444620021acfb124bb5425558daa2cd
 Block 10. Hash d40045e79579d54b90f3ecba02c885f8a5a9701485af1958ca56d13d9435ce0d
 ```
 
+## Part 2: Making the blockchain distributed
+
+So far we have a extremely simple blockchain, it lacks one of the features that makes blockchain so powerful: decentralization. That means making the blockchain replicated, shared, and synchronized. 
+
+For use as a [distributed ledger](https://en.wikipedia.org/wiki/Distributed_ledger) a blockchain is typically managed by a peer-to-peer network collectively adhering to a protocol for validating new blocks. Once recorded, the data in any given block cannot be altered retroactively without the alteration of all subsequent blocks, which needs a collusion of the network majority.
+
+Although we can store any kind of data in a block, let's use the blockchain to run a cryptocurrency. From now on, the data will contain three fields: a sender, a receiver and an amount.
+```json
+{
+  "from": "sender-public-key",
+  "to": "receiver-public-key",
+  "amount": 3
+}
+```
+
+Now that we have defined a transacion, we need a way to add them to the network. We call *node* to each peer in the network
 
 
-  For use as a distributed ledger a blockchain is typically managed by a peer-to-peer network collectively adhering to a protocol for validating new blocks. Once recorded, the data in any given block cannot be altered retroactively without the alteration of all subsequent blocks, which needs a collusion of the network majority.
+
+
 
 
 ## Sources
