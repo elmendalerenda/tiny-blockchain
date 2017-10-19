@@ -43,14 +43,14 @@ class ChainTest < Minitest::Test
 
   # def test_add_blocks
   #   chain = Chain.init
-  #   (0..20).each { |e|
+  #   (0..9).each { |e|
   #     chain.add_block("Block #{e}")
   #     puts chain.last_block
   #   }
   # end
   #
   def test_a_node_add_blocks_via_mining
-    node = Node.new
+    node = Node.new(MockPOWGenerator.new)
 
     tx = { from: 'a sender',
            to: 'a receiver',
@@ -66,7 +66,7 @@ class ChainTest < Minitest::Test
   end
 
   def test_mining_creates_1_asset
-    node = Node.new
+    node = Node.new(MockPOWGenerator.new)
 
     tx = { from: 'a sender',
            to: 'a receiver',
@@ -102,11 +102,13 @@ class ChainTest < Minitest::Test
   end
 
   def test_POW
+    first_proof = POWGenerator.new.pow(0)
 
+    assert_equal(9, first_proof)
 
+    second_proof = POWGenerator.new.pow(first_proof)
 
-
-
+    assert_equal(18, second_proof)
   end
 
   class MockPOWGenerator
@@ -156,8 +158,24 @@ class Node
 end
 
 class POWGenerator
-  def pow
-    'pow'
+  def pow(number)
+    increment = next_interation(number)
+
+    while(valid_pow?(increment)) do
+      increment = next_interation(increment)
+    end
+
+    increment
+  end
+
+  private
+
+  def valid_pow?(n)
+    n % 9 != 0
+  end
+
+  def next_interation(n)
+    n + 1
   end
 end
 
