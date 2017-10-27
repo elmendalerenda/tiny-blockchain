@@ -1,12 +1,16 @@
 # Tiny Blockchain
 
-## Part 1: The simplest blockchain
+In general terms, a Blockchain is a way to structure data, and the foundation of cryptocurrencies like Bitcoin. It consists of concatenated blocks of transactions and given its decentralized nature, allows to share a digital ledger across a network of computers without need for a central authority.
 
-A blockchain is a continuously **growing list of records, called blocks**, which are linked and secured using cryptography.
+In this exercise, we will make a very simple version of a blockchain to store a currency. Let's call it ChiquiCoin.
+
+## Part 1: The simplest blockchain
 
 ### Blocks
 
-Each block typically contains a **hash** as a link to a previous block, a **timestamp**, **transaction data**, and its **index** in the blockchain. 
+A blockchain is a continuously **growing list of records, called blocks**, which are linked and secured using cryptography.
+
+Each block contains a **hash** as a link to a previous block, a **timestamp**, the **transaction data**, and its **index** in the blockchain. 
 
 ### The Chain
 
@@ -72,7 +76,11 @@ Mining nodes validate transactions, add them to the block they are building, and
 
 ### Decentralization
 
-Blockchains are secure by design and are an example of a distributed computing system with high Byzantine fault tolerance. Decentralized consensus has therefore been achieved with a blockchain.
+Blockchains are secure by design and are an example of a distributed computing system with high fault tolerance. 
+
+To achieve this, we make each node broadcast its version of the chain to the others and allow them to receive the chains of other nodes. After that, each node has to verify the other nodes’ chains so that the every node in the network can come to a consensus of what the resulting blockchain will look like.
+
+Our consensus algorithm will be rather simple: if a node’s chain is different from another’s, then the longest chain in the network stays and all shorter chains will be deleted. If there is no conflict between the chains in our network, then we carry on.
 
 
 ## Sources
