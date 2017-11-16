@@ -1,8 +1,8 @@
 # Tiny Blockchain
 
-In general terms, a Blockchain is a way to structure data, and the foundation of cryptocurrencies like Bitcoin. It consists of concatenated blocks of transactions and given its decentralized nature, allows to share a digital ledger across a network of computers without need for a central authority.
+A Blockchain is, in general terms, a way to structure data and the foundation of cryptocurrencies like Bitcoin. It consists of concatenated blocks of transactions and, given its decentralized nature, it allows sharing a digital ledger across a network of computers without the need of a central authority.
 
-In this exercise, we will make a very simple version of a blockchain to store a currency. Let's call it ChiquiCoin.
+In this exercise, we will build a very simple version of a blockchain to store a currency. Let's call it PequeCoin.
 
 ## Part 1: The simplest blockchain
 
@@ -10,7 +10,8 @@ In this exercise, we will make a very simple version of a blockchain to store a 
 
 A blockchain is a continuously **growing list of records, called blocks**, which are linked and secured using cryptography.
 
-Each block contains a **hash** as a link to a previous block, a **timestamp**, the **transaction data**, and its **index** in the blockchain. 
+Let's start defining a basic version of a block. Each block contains a **timestamp**, the **transaction data**, its **index** in the blockchain and it is identified by a **hash**. Given that a block lives inside a blockchain, the way we concatenate blocks is via the hash: each block contains the hash of the previous block of the chain.
+
 
 ```ruby
 irb(main):001:0> Block.new(0, 'Transaction details', "prev. hash")
@@ -19,9 +20,9 @@ irb(main):001:0> Block.new(0, 'Transaction details', "prev. hash")
 
 ### The Chain
 
-Any blockchain needs a first block, this block is a special block called **genesis block**. To make things easy, this block is of index 0, and it has an arbitrary data value and an arbitrary value in the “previous hash” parameter.
+Any blockchain needs a first block. This special block is called **genesis block**. To make things easy, this block has index 0, it has an arbitrary transaction data and arbitrary value as the previous hash.
 
-The hash of each block includes the **previous timestamp and previous hash**, forming a chain, with each additional hash reinforcing the ones before it all the way back to the original genesis block
+The strengh of the blockchain lives in the creation of each hash. The integrity increases with each block since its **hash includes the previous hash and the timestamp**. An attacker would need to rewrite the whole chain in order to chain one block.   
 
 ```ruby
 irb(main):001:0> chain = Chain.init
